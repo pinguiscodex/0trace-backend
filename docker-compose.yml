@@ -1,0 +1,74 @@
+services:
+  mariadb:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: 0trace
+      MARIADB_USER: 0trace
+      MARIADB_PASSWORD: 0trace
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_CHARACTER_SET_SERVER: utf8mb4
+      MARIADB_COLLATION_SERVER: utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: ./apps/api
+    command: gunicorn config.wsgi:application -c docker/gunicorn.conf.py
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.local
+      DJANGO_SECRET_KEY: dev-only-change-me
+      DJANGO_DEBUG: "1"
+      DJANGO_USE_SQLITE: "0"
+      MARIADB_HOST: mariadb
+      MARIADB_PORT: "3306"
+      MARIADB_DATABASE: 0trace
+      MARIADB_USER: 0trace
+      MARIADB_PASSWORD: 0trace
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    ports:
+      - "8000:8000"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  worker:
+    build:
+      context: ./apps/api
+    command: celery -A config.celery worker --loglevel=info
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.local
+      DJANGO_SECRET_KEY: dev-only-change-me
+      DJANGO_DEBUG: "1"
+      DJANGO_USE_SQLITE: "0"
+      MARIADB_HOST: mariadb
+      MARIADB_PORT: "3306"
+      MARIADB_DATABASE: 0trace
+      MARIADB_USER: 0trace
+      MARIADB_PASSWORD: 0trace
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+volumes:
+  mariadb-data:
+

@@ -1,0 +1,5281 @@
+openapi: 3.0.3
+info:
+  title: 0trace API
+  version: 0.1.0
+  description: Backend API for the 0trace hacking simulation game.
+paths:
+  /api/v1/achievements/:
+    get:
+      operationId: achievements_retrieve
+      tags:
+      - progression
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AchievementDefinition'
+          description: ''
+  /api/v1/apps/:
+    get:
+      operationId: apps_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - apps
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAppDefinitionList'
+          description: ''
+  /api/v1/apps/{id}/:
+    get:
+      operationId: apps_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this app definition.
+        required: true
+      tags:
+      - apps
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppDefinition'
+          description: ''
+  /api/v1/auth/csrf/:
+    get:
+      operationId: auth_csrf_retrieve
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/login/:
+    post:
+      operationId: auth_login_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/session/:
+    get:
+      operationId: auth_session_retrieve
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/signup/:
+    post:
+      operationId: auth_signup_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Signup'
+            examples:
+              Signup:
+                value:
+                  handle: tracepilot
+                  email: trace@example.com
+                  password: correct horse battery
+                  terms_accepted: true
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Signup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Signup'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+              examples:
+                Signup:
+                  value:
+                    handle: tracepilot
+                    email: trace@example.com
+                    password: correct horse battery
+                    terms_accepted: true
+          description: ''
+  /api/v1/bootstrap/:
+    get:
+      operationId: bootstrap_retrieve
+      tags:
+      - bootstrap
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/bootstrap/complete-tutorial-step/:
+    post:
+      operationId: bootstrap_complete_tutorial_step_create
+      tags:
+      - bootstrap
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TutorialCompleteStep'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TutorialCompleteStep'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TutorialCompleteStep'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTutorialProgress'
+          description: ''
+  /api/v1/browser/resolve/:
+    post:
+      operationId: browser_resolve_create
+      tags:
+      - browser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BrowserResolve'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BrowserResolve'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BrowserResolve'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/certificates/:
+    get:
+      operationId: certificates_retrieve
+      tags:
+      - browser
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certificate'
+          description: ''
+  /api/v1/certificates/purchase/:
+    post:
+      operationId: certificates_purchase_create
+      tags:
+      - browser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificatePurchase'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CertificatePurchase'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CertificatePurchase'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certificate'
+          description: ''
+  /api/v1/coins/:
+    get:
+      operationId: coins_retrieve
+      tags:
+      - economy
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoinDefinition'
+          description: ''
+  /api/v1/coins/{slug}/buy/:
+    post:
+      operationId: coins_buy_create
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - economy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoinBuy'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CoinBuy'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CoinBuy'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletTransaction'
+          description: ''
+  /api/v1/coins/{slug}/prices/:
+    get:
+      operationId: coins_prices_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - economy
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoinPricePoint'
+          description: ''
+  /api/v1/coins/{slug}/sell/:
+    post:
+      operationId: coins_sell_create
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - economy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoinSell'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CoinSell'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CoinSell'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletTransaction'
+          description: ''
+  /api/v1/crack-jobs/:
+    get:
+      operationId: crack_jobs_list
+      tags:
+      - jobs
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrackJob'
+          description: ''
+    post:
+      operationId: crack_jobs_create
+      tags:
+      - jobs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrackJobCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CrackJobCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CrackJobCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrackJob'
+          description: ''
+  /api/v1/crack-jobs/{crack_job_id}/:
+    get:
+      operationId: crack_jobs_retrieve
+      parameters:
+      - in: path
+        name: crack_job_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - jobs
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrackJob'
+          description: ''
+  /api/v1/crack-jobs/{crack_job_id}/cancel/:
+    post:
+      operationId: crack_jobs_cancel_create
+      parameters:
+      - in: path
+        name: crack_job_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - jobs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrackJob'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CrackJob'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CrackJob'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrackJob'
+          description: ''
+  /api/v1/deliveries/:
+    get:
+      operationId: deliveries_list
+      tags:
+      - hardware
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Delivery'
+          description: ''
+  /api/v1/deliveries/{delivery_id}/:
+    get:
+      operationId: deliveries_retrieve
+      parameters:
+      - in: path
+        name: delivery_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - hardware
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+  /api/v1/deliveries/{delivery_id}/claim/:
+    post:
+      operationId: deliveries_claim_create
+      parameters:
+      - in: path
+        name: delivery_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - hardware
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+  /api/v1/delivery-subscription/:
+    get:
+      operationId: delivery_subscription_retrieve
+      tags:
+      - hardware
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverySubscription'
+          description: ''
+  /api/v1/delivery-subscription/cancel/:
+    post:
+      operationId: delivery_subscription_cancel_create
+      tags:
+      - hardware
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliverySubscription'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeliverySubscription'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DeliverySubscription'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverySubscription'
+          description: ''
+  /api/v1/delivery-subscription/subscribe/:
+    post:
+      operationId: delivery_subscription_subscribe_create
+      tags:
+      - hardware
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliverySubscription'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeliverySubscription'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DeliverySubscription'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverySubscription'
+          description: ''
+  /api/v1/desktop-shortcuts/:
+    get:
+      operationId: desktop_shortcuts_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - desktop-shortcuts
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDesktopShortcutList'
+          description: ''
+  /api/v1/desktop-shortcuts/{id}/:
+    get:
+      operationId: desktop_shortcuts_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - desktop-shortcuts
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DesktopShortcut'
+          description: ''
+  /api/v1/domains/:
+    get:
+      operationId: domains_retrieve
+      tags:
+      - browser
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+          description: ''
+  /api/v1/domains/purchase/:
+    post:
+      operationId: domains_purchase_create
+      tags:
+      - browser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainPurchase'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DomainPurchase'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DomainPurchase'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+          description: ''
+  /api/v1/files/{node_id}/:
+    get:
+      operationId: files_retrieve
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - filesystem
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileNode'
+          description: ''
+    patch:
+      operationId: files_partial_update
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - filesystem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedFileNode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedFileNode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedFileNode'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileNode'
+          description: ''
+    delete:
+      operationId: files_destroy
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - filesystem
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/files/{node_id}/copy/:
+    post:
+      operationId: files_copy_create
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - filesystem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileMoveCopy'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FileMoveCopy'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileMoveCopy'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileNode'
+          description: ''
+  /api/v1/files/{node_id}/move/:
+    post:
+      operationId: files_move_create
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - filesystem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileMoveCopy'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FileMoveCopy'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileMoveCopy'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileNode'
+          description: ''
+  /api/v1/files/{node_id}/permissions/:
+    post:
+      operationId: files_permissions_create
+      parameters:
+      - in: path
+        name: node_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - filesystem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilePermission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FilePermission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FilePermission'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilePermission'
+          description: ''
+  /api/v1/hardware/catalog/:
+    get:
+      operationId: hardware_catalog_retrieve
+      tags:
+      - hardware
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwareCatalogItem'
+          description: ''
+  /api/v1/hardware/catalog/{sku}/purchase/:
+    post:
+      operationId: hardware_catalog_purchase_create
+      parameters:
+      - in: path
+        name: sku
+        schema:
+          type: string
+        required: true
+      tags:
+      - hardware
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HardwarePurchase'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HardwarePurchase'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HardwarePurchase'
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+  /api/v1/jobs/:
+    get:
+      operationId: jobs_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - jobs
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPersistedJobList'
+          description: ''
+  /api/v1/jobs/{id}/:
+    get:
+      operationId: jobs_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this persisted job.
+        required: true
+      tags:
+      - jobs
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersistedJob'
+          description: ''
+  /api/v1/machines/:
+    get:
+      operationId: machines_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - machines
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMachineList'
+          description: ''
+  /api/v1/machines/{machine_id}/equipment/:
+    get:
+      operationId: machines_equipment_retrieve
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - hardware
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EquippedHardware'
+          description: ''
+  /api/v1/machines/{machine_id}/equipment/equip/:
+    post:
+      operationId: machines_equipment_equip_create
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - hardware
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EquipmentCommand'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EquipmentCommand'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EquipmentCommand'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/machines/{machine_id}/equipment/unequip/:
+    post:
+      operationId: machines_equipment_unequip_create
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - hardware
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EquipmentCommand'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EquipmentCommand'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EquipmentCommand'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/machines/{machine_id}/filesystem/nodes/:
+    get:
+      operationId: machines_filesystem_nodes_list
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - filesystem
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FileNode'
+          description: ''
+    post:
+      operationId: machines_filesystem_nodes_create
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - filesystem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileNodeCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FileNodeCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileNodeCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileNode'
+          description: ''
+  /api/v1/machines/{machine_id}/inventory/:
+    get:
+      operationId: machines_inventory_retrieve
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - hardware
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryItem'
+          description: ''
+  /api/v1/machines/{machine_id}/security-events/:
+    get:
+      operationId: machines_security_events_retrieve
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - telemetry
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityEvent'
+          description: ''
+  /api/v1/machines/{machine_id}/software/:
+    get:
+      operationId: machines_software_retrieve
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - software
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SoftwareFile'
+          description: ''
+  /api/v1/machines/{machine_id}/software/select/:
+    post:
+      operationId: machines_software_select_create
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - software
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SoftwareSelect'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SoftwareSelect'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SoftwareSelect'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/machines/{machine_id}/terminal/execute/:
+    post:
+      operationId: machines_terminal_execute_create
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - machines
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TerminalExecute'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TerminalExecute'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TerminalExecute'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/machines/{machine_id}/terminal/history/:
+    get:
+      operationId: machines_terminal_history_retrieve
+      parameters:
+      - in: path
+        name: machine_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - machines
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TerminalExecute'
+          description: ''
+  /api/v1/machines/{id}/:
+    get:
+      operationId: machines_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      tags:
+      - machines
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Machine'
+          description: ''
+  /api/v1/machines/{id}/apps/:
+    get:
+      operationId: machines_apps_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - apps
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAppInstallList'
+          description: ''
+  /api/v1/machines/{id}/apps/install/:
+    post:
+      operationId: machines_apps_install_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      tags:
+      - apps
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppCommand'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AppCommand'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AppCommand'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppInstall'
+          description: ''
+  /api/v1/machines/{id}/apps/uninstall/:
+    post:
+      operationId: machines_apps_uninstall_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      tags:
+      - apps
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppCommand'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AppCommand'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AppCommand'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppInstall'
+          description: ''
+  /api/v1/machines/{id}/logout/:
+    post:
+      operationId: machines_logout_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      tags:
+      - machines
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Machine'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Machine'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Machine'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/machines/{id}/os/install/:
+    post:
+      operationId: machines_os_install_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      tags:
+      - os
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OSInstallCommand'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OSInstallCommand'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OSInstallCommand'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/machines/{id}/restart/:
+    post:
+      operationId: machines_restart_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      tags:
+      - machines
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Machine'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Machine'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Machine'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/machines/{id}/settings/:
+    get:
+      operationId: machines_settings_retrieve
+      description: |-
+        A settings object that allows REST Framework settings to be accessed as
+        properties. For example:
+
+            from rest_framework.settings import api_settings
+            print(api_settings.DEFAULT_RENDERER_CLASSES)
+
+        Any setting with string import paths will be automatically resolved
+        and return the class, rather than the string literal.
+
+        Note:
+        This is an internal class that is only compatible with settings namespaced
+        under the REST_FRAMEWORK name. It is not intended to be used by 3rd-party
+        apps, and test helpers like `override_settings` may not work as expected.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      tags:
+      - machines
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+    patch:
+      operationId: machines_settings_partial_update
+      description: |-
+        A settings object that allows REST Framework settings to be accessed as
+        properties. For example:
+
+            from rest_framework.settings import api_settings
+            print(api_settings.DEFAULT_RENDERER_CLASSES)
+
+        Any setting with string import paths will be automatically resolved
+        and return the class, rather than the string literal.
+
+        Note:
+        This is an internal class that is only compatible with settings namespaced
+        under the REST_FRAMEWORK name. It is not intended to be used by 3rd-party
+        apps, and test helpers like `override_settings` may not work as expected.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      tags:
+      - machines
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMachinePreference'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMachinePreference'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMachinePreference'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/machines/{id}/shutdown/:
+    post:
+      operationId: machines_shutdown_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      tags:
+      - machines
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Machine'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Machine'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Machine'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/machines/{id}/stats/:
+    get:
+      operationId: machines_stats_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this machine.
+        required: true
+      tags:
+      - machines
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/mail/messages/:
+    get:
+      operationId: mail_messages_list
+      tags:
+      - communications
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MailRecipientState'
+          description: ''
+    post:
+      operationId: mail_messages_create
+      tags:
+      - communications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MailSend'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MailSend'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MailSend'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/mail/messages/{message_id}/:
+    get:
+      operationId: mail_messages_retrieve
+      parameters:
+      - in: path
+        name: message_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - communications
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MailRecipientState'
+          description: ''
+  /api/v1/mail/messages/{message_id}/mark-read/:
+    post:
+      operationId: mail_messages_mark_read_create
+      parameters:
+      - in: path
+        name: message_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - communications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MailRecipientState'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MailRecipientState'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MailRecipientState'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MailRecipientState'
+          description: ''
+  /api/v1/mail/messages/{message_id}/mark-unread/:
+    post:
+      operationId: mail_messages_mark_unread_create
+      parameters:
+      - in: path
+        name: message_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - communications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MailRecipientState'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MailRecipientState'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MailRecipientState'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MailRecipientState'
+          description: ''
+  /api/v1/mail/messages/{message_id}/reply/:
+    post:
+      operationId: mail_messages_reply_create
+      parameters:
+      - in: path
+        name: message_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - communications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MailSend'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MailSend'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MailSend'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/marketplace/listings/:
+    get:
+      operationId: marketplace_listings_list
+      tags:
+      - marketplace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MarketplaceListing'
+          description: ''
+    post:
+      operationId: marketplace_listings_create
+      tags:
+      - marketplace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketplaceListingCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MarketplaceListingCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MarketplaceListingCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketplaceListing'
+          description: ''
+  /api/v1/marketplace/listings/{listing_id}/:
+    get:
+      operationId: marketplace_listings_retrieve
+      parameters:
+      - in: path
+        name: listing_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - marketplace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketplaceListing'
+          description: ''
+    patch:
+      operationId: marketplace_listings_partial_update
+      parameters:
+      - in: path
+        name: listing_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - marketplace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMarketplaceListing'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMarketplaceListing'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMarketplaceListing'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketplaceListing'
+          description: ''
+  /api/v1/marketplace/listings/{listing_id}/cancel/:
+    post:
+      operationId: marketplace_listings_cancel_create
+      parameters:
+      - in: path
+        name: listing_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - marketplace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketplaceListing'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MarketplaceListing'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MarketplaceListing'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketplaceListing'
+          description: ''
+  /api/v1/marketplace/listings/{listing_id}/purchase/:
+    post:
+      operationId: marketplace_listings_purchase_create
+      parameters:
+      - in: path
+        name: listing_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - marketplace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketplacePurchase'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MarketplacePurchase'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MarketplacePurchase'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketplaceTransaction'
+          description: ''
+  /api/v1/mining-jobs/:
+    get:
+      operationId: mining_jobs_list
+      tags:
+      - economy
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MiningJob'
+          description: ''
+    post:
+      operationId: mining_jobs_create
+      tags:
+      - economy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiningJobCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MiningJobCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MiningJobCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiningJob'
+          description: ''
+  /api/v1/mining-jobs/{mining_job_id}/:
+    get:
+      operationId: mining_jobs_retrieve
+      parameters:
+      - in: path
+        name: mining_job_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - economy
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiningJob'
+          description: ''
+  /api/v1/mining-jobs/{mining_job_id}/cancel/:
+    post:
+      operationId: mining_jobs_cancel_create
+      parameters:
+      - in: path
+        name: mining_job_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - economy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiningJob'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MiningJob'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MiningJob'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiningJob'
+          description: ''
+  /api/v1/notifications/:
+    get:
+      operationId: notifications_retrieve
+      tags:
+      - communications
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/notifications/{notification_id}/mark-read/:
+    post:
+      operationId: notifications_mark_read_create
+      parameters:
+      - in: path
+        name: notification_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - communications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Notification'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Notification'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/notifications/mark-all-read/:
+    post:
+      operationId: notifications_mark_all_read_create
+      tags:
+      - communications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Notification'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Notification'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/os/:
+    get:
+      operationId: os_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - os
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOSDefinitionList'
+          description: ''
+  /api/v1/os/{slug}/:
+    get:
+      operationId: os_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - os
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OSDefinition'
+          description: ''
+  /api/v1/searchable/search/:
+    get:
+      operationId: searchable_search_retrieve
+      tags:
+      - browser
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+          description: ''
+  /api/v1/skills/:
+    get:
+      operationId: skills_retrieve
+      tags:
+      - software
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillDefinition'
+          description: ''
+  /api/v1/software/{software_id}/level-up/:
+    post:
+      operationId: software_level_up_create
+      parameters:
+      - in: path
+        name: software_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - software
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SoftwareFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SoftwareFile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SoftwareFile'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SoftwareFile'
+          description: ''
+  /api/v1/telemetry/audit-logs/:
+    get:
+      operationId: telemetry_audit_logs_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - telemetry
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditLogList'
+          description: ''
+  /api/v1/telemetry/audit-logs/{id}/:
+    get:
+      operationId: telemetry_audit_logs_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this audit log.
+        required: true
+      tags:
+      - telemetry
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLog'
+          description: ''
+  /api/v1/telemetry/security-events/:
+    get:
+      operationId: telemetry_security_events_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - telemetry
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSecurityEventList'
+          description: ''
+  /api/v1/telemetry/security-events/{id}/:
+    get:
+      operationId: telemetry_security_events_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this security event.
+        required: true
+      tags:
+      - telemetry
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityEvent'
+          description: ''
+  /api/v1/tutorials/:
+    get:
+      operationId: tutorials_retrieve
+      tags:
+      - progression
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TutorialMissionDefinition'
+          description: ''
+  /api/v1/tutorials/{mission_id}/complete-step/:
+    post:
+      operationId: tutorials_complete_step_create
+      parameters:
+      - in: path
+        name: mission_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - progression
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TutorialCompleteStep'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TutorialCompleteStep'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TutorialCompleteStep'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTutorialProgress'
+          description: ''
+  /api/v1/users/me/skills/:
+    get:
+      operationId: users_me_skills_retrieve
+      tags:
+      - software
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillProgress'
+          description: ''
+  /api/v1/wallets/:
+    get:
+      operationId: wallets_list
+      tags:
+      - economy
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Wallet'
+          description: ''
+    post:
+      operationId: wallets_create
+      tags:
+      - economy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WalletCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WalletCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wallet'
+          description: ''
+  /api/v1/wallets/{wallet_id}/:
+    get:
+      operationId: wallets_retrieve
+      parameters:
+      - in: path
+        name: wallet_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - economy
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wallet'
+          description: ''
+    delete:
+      operationId: wallets_destroy
+      parameters:
+      - in: path
+        name: wallet_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - economy
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/wallets/{wallet_id}/transfer/:
+    post:
+      operationId: wallets_transfer_create
+      parameters:
+      - in: path
+        name: wallet_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - economy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletTransfer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WalletTransfer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WalletTransfer'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletTransaction'
+          description: ''
+  /api/v1/website-files/{file_id}/:
+    patch:
+      operationId: website_files_partial_update
+      parameters:
+      - in: path
+        name: file_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - browser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWebsiteFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWebsiteFile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWebsiteFile'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebsiteFile'
+          description: ''
+    delete:
+      operationId: website_files_destroy
+      parameters:
+      - in: path
+        name: file_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - browser
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/websites/:
+    get:
+      operationId: websites_list
+      tags:
+      - browser
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Website'
+          description: ''
+    post:
+      operationId: websites_create
+      tags:
+      - browser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Website'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Website'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Website'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Website'
+          description: ''
+  /api/v1/websites/{website_id}/:
+    get:
+      operationId: websites_retrieve
+      parameters:
+      - in: path
+        name: website_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - browser
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Website'
+          description: ''
+    patch:
+      operationId: websites_partial_update
+      parameters:
+      - in: path
+        name: website_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - browser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWebsite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWebsite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWebsite'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Website'
+          description: ''
+    delete:
+      operationId: websites_destroy
+      parameters:
+      - in: path
+        name: website_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - browser
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/websites/{website_id}/files/:
+    get:
+      operationId: websites_files_retrieve
+      parameters:
+      - in: path
+        name: website_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - browser
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebsiteFile'
+          description: ''
+    post:
+      operationId: websites_files_create
+      parameters:
+      - in: path
+        name: website_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - browser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebsiteFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WebsiteFile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WebsiteFile'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebsiteFile'
+          description: ''
+  /api/v1/websites/{website_id}/publish/:
+    post:
+      operationId: websites_publish_create
+      parameters:
+      - in: path
+        name: website_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - browser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Website'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Website'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Website'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Website'
+          description: ''
+components:
+  schemas:
+    AchievementDefinition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 80
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 160
+        description:
+          type: string
+        criteria: {}
+        reward: {}
+        active:
+          type: boolean
+      required:
+      - created_at
+      - id
+      - name
+      - slug
+      - updated_at
+    AppCommand:
+      type: object
+      properties:
+        app_slug:
+          type: string
+          pattern: ^[-a-zA-Z0-9_]+$
+      required:
+      - app_slug
+    AppDefinition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 60
+          pattern: ^[-a-zA-Z0-9_]+$
+        default_display_name:
+          type: string
+          maxLength: 80
+        os_display_names: {}
+        category:
+          type: string
+          maxLength: 40
+        is_core:
+          type: boolean
+        is_uninstallable:
+          type: boolean
+        required_permissions: {}
+        icon_key:
+          type: string
+          maxLength: 80
+        default_install_rules: {}
+        terminal_command_aliases: {}
+      required:
+      - category
+      - created_at
+      - default_display_name
+      - icon_key
+      - id
+      - slug
+      - updated_at
+    AppInstall:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        app:
+          $ref: '#/components/schemas/AppDefinition'
+        display_name:
+          type: string
+          maxLength: 80
+        active:
+          type: boolean
+        settings: {}
+        installed_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - app
+      - display_name
+      - id
+      - installed_at
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        event_type:
+          type: string
+          maxLength: 80
+        request_id:
+          type: string
+          maxLength: 64
+        metadata: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - event_type
+      - id
+    AvailabilityEnum:
+      enum:
+      - free
+      - paid
+      - starter
+      type: string
+      description: |-
+        * `free` - Free
+        * `paid` - Paid
+        * `starter` - Starter
+    BrowserResolve:
+      type: object
+      properties:
+        url:
+          type: string
+          maxLength: 500
+      required:
+      - url
+    CategoryEnum:
+      enum:
+      - cpu
+      - gpu
+      - motherboard
+      - ram
+      - hdd
+      - ssd
+      - usb
+      - case
+      - pear_chip
+      type: string
+      description: |-
+        * `cpu` - CPU
+        * `gpu` - GPU
+        * `motherboard` - Motherboard
+        * `ram` - RAM
+        * `hdd` - HDD
+        * `ssd` - SSD
+        * `usb` - USB Stick
+        * `case` - Case
+        * `pear_chip` - Integrated Pear Chip
+    Certificate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          type: string
+          maxLength: 20
+        expires_at:
+          type: string
+          format: date-time
+        domain:
+          type: string
+          format: uuid
+        owner:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - domain
+      - expires_at
+      - id
+      - owner
+      - updated_at
+    CertificatePurchase:
+      type: object
+      properties:
+        domain_id:
+          type: string
+          format: uuid
+      required:
+      - domain_id
+    CoinBuy:
+      type: object
+      properties:
+        wallet_id:
+          type: string
+          format: uuid
+        credit_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,8})?$
+      required:
+      - credit_amount
+      - wallet_id
+    CoinDefinition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 60
+          pattern: ^[-a-zA-Z0-9_]+$
+        symbol:
+          type: string
+          maxLength: 12
+        name:
+          type: string
+          maxLength: 100
+        is_primary:
+          type: boolean
+        difficulty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,6})?$
+        metadata: {}
+      required:
+      - created_at
+      - id
+      - name
+      - slug
+      - symbol
+      - updated_at
+    CoinPricePoint:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        price_at:
+          type: string
+          format: date-time
+        price_credits:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,8})?$
+        coin:
+          type: string
+          format: uuid
+      required:
+      - coin
+      - created_at
+      - id
+      - price_at
+      - price_credits
+      - updated_at
+    CoinSell:
+      type: object
+      properties:
+        wallet_id:
+          type: string
+          format: uuid
+        coin_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,8})?$
+      required:
+      - coin_amount
+      - wallet_id
+    CrackJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        target_ip:
+          type: string
+          maxLength: 45
+        status:
+          $ref: '#/components/schemas/CrackJobStatusEnum'
+        failure_code:
+          type: string
+          maxLength: 80
+        duration_seconds:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        metadata: {}
+        attacker:
+          type: string
+          format: uuid
+        attacker_machine:
+          type: string
+          format: uuid
+        target_machine:
+          type: string
+          format: uuid
+          nullable: true
+        cracker_software:
+          type: string
+          format: uuid
+          nullable: true
+        persisted_job:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - attacker
+      - attacker_machine
+      - created_at
+      - id
+      - target_ip
+      - updated_at
+    CrackJobCreate:
+      type: object
+      properties:
+        attacker_machine_id:
+          type: string
+          format: uuid
+        target_ip:
+          type: string
+          maxLength: 45
+        cracker_software_id:
+          type: string
+          format: uuid
+      required:
+      - attacker_machine_id
+      - target_ip
+    CrackJobStatusEnum:
+      enum:
+      - queued
+      - running
+      - succeeded
+      - failed
+      - cancelled
+      - expired
+      type: string
+      description: |-
+        * `queued` - Queued
+        * `running` - Running
+        * `succeeded` - Succeeded
+        * `failed` - Failed
+        * `cancelled` - Cancelled
+        * `expired` - Expired
+    Delivery:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/DeliveryStatusEnum'
+        eta:
+          type: string
+          format: date-time
+        delivered_at:
+          type: string
+          format: date-time
+          nullable: true
+        claimed_at:
+          type: string
+          format: date-time
+          nullable: true
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        speed:
+          type: string
+          maxLength: 20
+        idempotency_key:
+          type: string
+          nullable: true
+          maxLength: 120
+        metadata: {}
+        owner:
+          type: string
+          format: uuid
+        machine:
+          type: string
+          format: uuid
+          nullable: true
+        catalog_item:
+          type: string
+          format: uuid
+          nullable: true
+        hardware_item:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - created_at
+      - eta
+      - id
+      - owner
+      - updated_at
+    DeliveryStatusEnum:
+      enum:
+      - pending
+      - in_transit
+      - delivered
+      - claimed
+      - cancelled
+      - failed
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `in_transit` - In Transit
+        * `delivered` - Delivered
+        * `claimed` - Claimed
+        * `cancelled` - Cancelled
+        * `failed` - Failed
+    DeliverySubscription:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        active:
+          type: boolean
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        user:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - id
+      - updated_at
+      - user
+    DesktopShortcut:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        shortcut_type:
+          $ref: '#/components/schemas/ShortcutTypeEnum'
+        app_id:
+          type: string
+          nullable: true
+          maxLength: 60
+          pattern: ^[-a-zA-Z0-9_]+$
+        file_path:
+          type: string
+          nullable: true
+          maxLength: 500
+        file_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        grid_x:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        grid_y:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - shortcut_type
+    Domain:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 253
+        status:
+          type: string
+          maxLength: 20
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        owner:
+          type: string
+          format: uuid
+          nullable: true
+        machine:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - created_at
+      - id
+      - name
+      - updated_at
+    DomainPurchase:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 253
+        machine_id:
+          type: string
+          format: uuid
+      required:
+      - name
+    EquipmentCommand:
+      type: object
+      properties:
+        hardware_item_id:
+          type: string
+          format: uuid
+        slot:
+          type: string
+          default: default
+      required:
+      - hardware_item_id
+    EquippedHardware:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        item:
+          $ref: '#/components/schemas/HardwareItem'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        slot:
+          type: string
+          maxLength: 60
+        machine:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - id
+      - item
+      - machine
+      - slot
+      - updated_at
+    FileMoveCopy:
+      type: object
+      properties:
+        path:
+          type: string
+          maxLength: 1024
+      required:
+      - path
+    FileNode:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        machine:
+          type: string
+          format: uuid
+          readOnly: true
+        parent:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        owner:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        path:
+          type: string
+          maxLength: 1024
+        kind:
+          $ref: '#/components/schemas/FileNodeKindEnum'
+        file_type:
+          type: string
+          maxLength: 40
+        mime_type:
+          type: string
+          maxLength: 120
+        content:
+          type: string
+        size_bytes:
+          type: integer
+          readOnly: true
+        is_hidden:
+          type: boolean
+        is_system:
+          type: boolean
+        metadata: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - kind
+      - machine
+      - name
+      - owner
+      - parent
+      - path
+      - size_bytes
+      - updated_at
+    FileNodeCreate:
+      type: object
+      properties:
+        path:
+          type: string
+          maxLength: 1024
+        kind:
+          $ref: '#/components/schemas/FileNodeKindEnum'
+        content:
+          type: string
+        file_type:
+          type: string
+          default: text
+      required:
+      - kind
+      - path
+    FileNodeKindEnum:
+      enum:
+      - directory
+      - file
+      type: string
+      description: |-
+        * `directory` - Directory
+        * `file` - File
+    FilePermission:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        owner_read:
+          type: boolean
+        owner_write:
+          type: boolean
+        owner_execute:
+          type: boolean
+        public_read:
+          type: boolean
+        public_write:
+          type: boolean
+        public_execute:
+          type: boolean
+        privileged:
+          type: boolean
+      required:
+      - created_at
+      - id
+      - updated_at
+    HardwareCatalogItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        sku:
+          type: string
+          maxLength: 80
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 120
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        stats: {}
+        slot_requirements: {}
+        compatibility_tags: {}
+        physical:
+          type: boolean
+      required:
+      - category
+      - created_at
+      - id
+      - name
+      - price
+      - sku
+      - updated_at
+    HardwareItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        catalog_item:
+          $ref: '#/components/schemas/HardwareCatalogItem'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        serial_number:
+          type: string
+          maxLength: 80
+        status:
+          $ref: '#/components/schemas/HardwareItemStatusEnum'
+        owner:
+          type: string
+          format: uuid
+      required:
+      - catalog_item
+      - created_at
+      - id
+      - owner
+      - serial_number
+      - updated_at
+    HardwareItemStatusEnum:
+      enum:
+      - inventory
+      - equipped
+      - listed
+      - delivering
+      - sold
+      type: string
+      description: |-
+        * `inventory` - Inventory
+        * `equipped` - Equipped
+        * `listed` - Listed
+        * `delivering` - Delivering
+        * `sold` - Sold
+    HardwarePurchase:
+      type: object
+      properties:
+        target_machine_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Optional target machine for delivery
+    InventoryItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        item:
+          $ref: '#/components/schemas/HardwareItem'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          type: string
+          maxLength: 20
+        machine:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - id
+      - item
+      - machine
+      - updated_at
+    ItemTypeEnum:
+      enum:
+      - software
+      - hardware
+      type: string
+      description: |-
+        * `software` - software
+        * `hardware` - hardware
+    Login:
+      type: object
+      properties:
+        identifier:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - identifier
+      - password
+    Machine:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 80
+        hostname:
+          type: string
+          maxLength: 64
+          pattern: ^[-a-zA-Z0-9_]+$
+        fictional_ip:
+          type: string
+          maxLength: 45
+        active:
+          type: boolean
+        powered_on:
+          type: boolean
+        installed_os:
+          allOf:
+          - $ref: '#/components/schemas/OSInstall'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - fictional_ip
+      - hostname
+      - id
+      - installed_os
+      - name
+      - updated_at
+    MailMessage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        subject:
+          type: string
+          maxLength: 160
+        body:
+          type: string
+        system:
+          type: boolean
+        sender:
+          type: string
+          format: uuid
+          nullable: true
+        parent:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - body
+      - created_at
+      - id
+      - subject
+      - updated_at
+    MailRecipientState:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        message:
+          $ref: '#/components/schemas/MailMessage'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        read_at:
+          type: string
+          format: date-time
+          nullable: true
+        archived_at:
+          type: string
+          format: date-time
+          nullable: true
+        user:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - id
+      - message
+      - updated_at
+      - user
+    MailSend:
+      type: object
+      properties:
+        to_handle:
+          type: string
+          pattern: ^[-a-zA-Z0-9_]+$
+        subject:
+          type: string
+          maxLength: 160
+        body:
+          type: string
+      required:
+      - body
+      - subject
+      - to_handle
+    MarketplaceListing:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        item_type:
+          type: string
+          maxLength: 30
+        title:
+          type: string
+          maxLength: 160
+        description:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,8})?$
+        status:
+          $ref: '#/components/schemas/MarketplaceListingStatusEnum'
+        seller:
+          type: string
+          format: uuid
+        buyer:
+          type: string
+          format: uuid
+          nullable: true
+        software_file:
+          type: string
+          format: uuid
+          nullable: true
+        hardware_item:
+          type: string
+          format: uuid
+          nullable: true
+        coin:
+          type: string
+          format: uuid
+      required:
+      - coin
+      - created_at
+      - id
+      - item_type
+      - price
+      - seller
+      - title
+      - updated_at
+    MarketplaceListingCreate:
+      type: object
+      properties:
+        item_type:
+          $ref: '#/components/schemas/ItemTypeEnum'
+        item_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 160
+        description:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,8})?$
+        coin_slug:
+          type: string
+          default: credits
+          pattern: ^[-a-zA-Z0-9_]+$
+      required:
+      - item_id
+      - item_type
+      - price
+      - title
+    MarketplaceListingStatusEnum:
+      enum:
+      - draft
+      - active
+      - sold
+      - cancelled
+      - expired
+      type: string
+      description: |-
+        * `draft` - Draft
+        * `active` - Active
+        * `sold` - Sold
+        * `cancelled` - Cancelled
+        * `expired` - Expired
+    MarketplacePurchase:
+      type: object
+      properties:
+        buyer_wallet_id:
+          type: string
+          format: uuid
+        idempotency_key:
+          type: string
+      required:
+      - buyer_wallet_id
+    MarketplaceTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,8})?$
+        status:
+          type: string
+          maxLength: 20
+        idempotency_key:
+          type: string
+          nullable: true
+          maxLength: 120
+        listing:
+          type: string
+          format: uuid
+        buyer:
+          type: string
+          format: uuid
+        seller:
+          type: string
+          format: uuid
+        coin:
+          type: string
+          format: uuid
+      required:
+      - buyer
+      - coin
+      - created_at
+      - id
+      - listing
+      - price
+      - seller
+      - updated_at
+    MiningJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        mode:
+          type: string
+          maxLength: 20
+        status:
+          $ref: '#/components/schemas/MiningJobStatusEnum'
+        total_payout:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,8})?$
+        payout_settled_until:
+          type: string
+          format: date-time
+          nullable: true
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        user:
+          type: string
+          format: uuid
+        machine:
+          type: string
+          format: uuid
+        wallet:
+          type: string
+          format: uuid
+        coin:
+          type: string
+          format: uuid
+        miner_software:
+          type: string
+          format: uuid
+          nullable: true
+        persisted_job:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - coin
+      - created_at
+      - id
+      - machine
+      - updated_at
+      - user
+      - wallet
+    MiningJobCreate:
+      type: object
+      properties:
+        machine_id:
+          type: string
+          format: uuid
+        wallet_id:
+          type: string
+          format: uuid
+        coin_slug:
+          type: string
+          pattern: ^[-a-zA-Z0-9_]+$
+        miner_software_id:
+          type: string
+          format: uuid
+        mode:
+          allOf:
+          - $ref: '#/components/schemas/ModeEnum'
+          default: cpu
+      required:
+      - coin_slug
+      - machine_id
+      - wallet_id
+    MiningJobStatusEnum:
+      enum:
+      - queued
+      - running
+      - paused
+      - completed
+      - cancelled
+      - failed
+      type: string
+      description: |-
+        * `queued` - Queued
+        * `running` - Running
+        * `paused` - Paused
+        * `completed` - Completed
+        * `cancelled` - Cancelled
+        * `failed` - Failed
+    ModeEnum:
+      enum:
+      - cpu
+      - gpu
+      type: string
+      description: |-
+        * `cpu` - cpu
+        * `gpu` - gpu
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 160
+        body:
+          type: string
+        kind:
+          type: string
+          maxLength: 60
+        read_at:
+          type: string
+          format: date-time
+          nullable: true
+        metadata: {}
+        user:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - id
+      - title
+      - updated_at
+      - user
+    OSDefinition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 80
+        slug:
+          type: string
+          maxLength: 40
+          pattern: ^[-a-zA-Z0-9_]+$
+        version:
+          type: string
+          maxLength: 40
+        cost:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        availability:
+          $ref: '#/components/schemas/AvailabilityEnum'
+        modifiers: {}
+        default_apps: {}
+        command_set_reference:
+          type: string
+          maxLength: 80
+        manual_references: {}
+        allowed_window_managers: {}
+        acquisition_rules: {}
+        company_site:
+          type: string
+          maxLength: 120
+        terminal_style:
+          type: string
+          maxLength: 40
+        theme_metadata: {}
+      required:
+      - availability
+      - company_site
+      - created_at
+      - id
+      - name
+      - slug
+      - terminal_style
+      - updated_at
+      - version
+    OSInstall:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        os:
+          $ref: '#/components/schemas/OSDefinition'
+        window_manager:
+          type: string
+          maxLength: 80
+        installed_at:
+          type: string
+          format: date-time
+          readOnly: true
+        active:
+          type: boolean
+      required:
+      - id
+      - installed_at
+      - os
+    OSInstallCommand:
+      type: object
+      properties:
+        os_slug:
+          type: string
+          pattern: ^[-a-zA-Z0-9_]+$
+        window_manager:
+          type: string
+      required:
+      - os_slug
+    PaginatedAppDefinitionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppDefinition'
+    PaginatedAppInstallList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppInstall'
+    PaginatedAuditLogList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLog'
+    PaginatedDesktopShortcutList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DesktopShortcut'
+    PaginatedMachineList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Machine'
+    PaginatedOSDefinitionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OSDefinition'
+    PaginatedPersistedJobList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersistedJob'
+    PaginatedSecurityEventList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityEvent'
+    PatchedFileNode:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        machine:
+          type: string
+          format: uuid
+          readOnly: true
+        parent:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        owner:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        path:
+          type: string
+          maxLength: 1024
+        kind:
+          $ref: '#/components/schemas/FileNodeKindEnum'
+        file_type:
+          type: string
+          maxLength: 40
+        mime_type:
+          type: string
+          maxLength: 120
+        content:
+          type: string
+        size_bytes:
+          type: integer
+          readOnly: true
+        is_hidden:
+          type: boolean
+        is_system:
+          type: boolean
+        metadata: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedMachinePreference:
+      type: object
+      properties:
+        theme:
+          type: string
+          maxLength: 60
+        desktop_settings: {}
+    PatchedMarketplaceListing:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        item_type:
+          type: string
+          maxLength: 30
+        title:
+          type: string
+          maxLength: 160
+        description:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,8})?$
+        status:
+          $ref: '#/components/schemas/MarketplaceListingStatusEnum'
+        seller:
+          type: string
+          format: uuid
+        buyer:
+          type: string
+          format: uuid
+          nullable: true
+        software_file:
+          type: string
+          format: uuid
+          nullable: true
+        hardware_item:
+          type: string
+          format: uuid
+          nullable: true
+        coin:
+          type: string
+          format: uuid
+    PatchedWebsite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 160
+        site_type:
+          allOf:
+          - $ref: '#/components/schemas/SiteTypeEnum'
+          readOnly: true
+        trust_level:
+          type: string
+          readOnly: true
+        html:
+          type: string
+        css:
+          type: string
+        js:
+          type: string
+        sandbox_policy:
+          readOnly: true
+        status:
+          type: string
+          maxLength: 20
+        content_version:
+          type: integer
+          readOnly: true
+        owner:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        domain:
+          type: string
+          format: uuid
+          nullable: true
+    PatchedWebsiteFile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        path:
+          type: string
+          maxLength: 500
+        content_type:
+          type: string
+          maxLength: 80
+        content:
+          type: string
+        website:
+          type: string
+          format: uuid
+    PersistedJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        kind:
+          $ref: '#/components/schemas/PersistedJobKindEnum'
+        status:
+          $ref: '#/components/schemas/PersistedJobStatusEnum'
+        domain_object_type:
+          type: string
+          maxLength: 80
+        domain_object_id:
+          type: string
+          maxLength: 80
+        priority:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        run_after:
+          type: string
+          format: date-time
+        locked_by:
+          type: string
+          maxLength: 120
+        locked_at:
+          type: string
+          format: date-time
+          nullable: true
+        heartbeat_at:
+          type: string
+          format: date-time
+          nullable: true
+        attempt_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        max_attempts:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        progress_pct:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        payload_json: {}
+        result_json: {}
+        error_code:
+          type: string
+          maxLength: 80
+        error_message:
+          type: string
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        actor_user:
+          type: string
+          format: uuid
+          nullable: true
+        machine:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - created_at
+      - id
+      - kind
+      - run_after
+      - updated_at
+    PersistedJobKindEnum:
+      enum:
+      - mining
+      - cracking
+      - delivery
+      - generic
+      type: string
+      description: |-
+        * `mining` - Mining
+        * `cracking` - Cracking
+        * `delivery` - Delivery
+        * `generic` - Generic
+    PersistedJobStatusEnum:
+      enum:
+      - queued
+      - claimed
+      - running
+      - retrying
+      - succeeded
+      - failed
+      - cancelled
+      - expired
+      type: string
+      description: |-
+        * `queued` - Queued
+        * `claimed` - Claimed
+        * `running` - Running
+        * `retrying` - Retrying
+        * `succeeded` - Succeeded
+        * `failed` - Failed
+        * `cancelled` - Cancelled
+        * `expired` - Expired
+    SearchResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        domain:
+          type: string
+          maxLength: 253
+        url:
+          type: string
+          maxLength: 500
+        title:
+          type: string
+          maxLength: 160
+        body:
+          type: string
+        site_type:
+          type: string
+          maxLength: 30
+        trust_level:
+          type: string
+          maxLength: 30
+        website:
+          type: string
+          format: uuid
+          nullable: true
+        predefined_website:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - created_at
+      - domain
+      - id
+      - site_type
+      - title
+      - trust_level
+      - updated_at
+      - url
+    SecurityEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        machine:
+          type: string
+          format: uuid
+          nullable: true
+        event_type:
+          type: string
+          maxLength: 80
+        severity:
+          type: string
+          maxLength: 20
+        message:
+          type: string
+          maxLength: 255
+        metadata: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - event_type
+      - id
+      - message
+    ShortcutTypeEnum:
+      enum:
+      - app
+      - file
+      type: string
+      description: |-
+        * `app` - App
+        * `file` - File
+    Signup:
+      type: object
+      properties:
+        handle:
+          type: string
+          maxLength: 32
+          pattern: ^[-a-zA-Z0-9_]+$
+        email:
+          type: string
+          format: email
+        display_name:
+          type: string
+          maxLength: 80
+        password:
+          type: string
+          writeOnly: true
+          minLength: 10
+        terms_accepted:
+          type: boolean
+      required:
+      - email
+      - handle
+      - password
+      - terms_accepted
+    SiteTypeEnum:
+      enum:
+      - predefined
+      - user_hosted
+      type: string
+      description: |-
+        * `predefined` - Predefined
+        * `user_hosted` - User Hosted
+    SkillDefinition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 60
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 100
+        category:
+          type: string
+          maxLength: 60
+        max_level:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        xp_curve: {}
+        metadata: {}
+      required:
+      - category
+      - created_at
+      - id
+      - name
+      - slug
+      - updated_at
+    SkillProgress:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        skill:
+          $ref: '#/components/schemas/SkillDefinition'
+        level:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        xp:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - skill
+      - updated_at
+    SoftwareFile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        software_type:
+          $ref: '#/components/schemas/SoftwareTypeEnum'
+        level:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        xp:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        base_stats: {}
+        transferable:
+          type: boolean
+        machine:
+          type: string
+          format: uuid
+        file_node:
+          type: string
+          format: uuid
+          nullable: true
+        owner:
+          type: string
+          format: uuid
+        locked_by_job:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - created_at
+      - id
+      - machine
+      - name
+      - owner
+      - software_type
+      - updated_at
+    SoftwareSelect:
+      type: object
+      properties:
+        app_slug:
+          type: string
+          pattern: ^[-a-zA-Z0-9_]+$
+        software_file_id:
+          type: string
+          format: uuid
+      required:
+      - app_slug
+      - software_file_id
+    SoftwareTypeEnum:
+      enum:
+      - firewall
+      - waterwall
+      - cracker
+      - miner
+      - webserver
+      - utility
+      - app_package
+      type: string
+      description: |-
+        * `firewall` - Firewall
+        * `waterwall` - Waterwall
+        * `cracker` - Cracker
+        * `miner` - Miner
+        * `webserver` - Webserver
+        * `utility` - Utility
+        * `app_package` - App Package
+    TerminalExecute:
+      type: object
+      properties:
+        command:
+          type: string
+          maxLength: 500
+      required:
+      - command
+    TutorialCompleteStep:
+      type: object
+      properties:
+        step_key:
+          type: string
+          maxLength: 120
+      required:
+      - step_key
+    TutorialMissionDefinition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 80
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 160
+        steps: {}
+        reward: {}
+        active:
+          type: boolean
+      required:
+      - created_at
+      - id
+      - name
+      - slug
+      - updated_at
+    UserTutorialProgress:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        mission:
+          $ref: '#/components/schemas/TutorialMissionDefinition'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        current_step:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        completed_steps: {}
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        user:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - id
+      - mission
+      - updated_at
+      - user
+    Wallet:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        address:
+          type: string
+          maxLength: 80
+        label:
+          type: string
+          maxLength: 80
+        active:
+          type: boolean
+        balances:
+          type: array
+          items:
+            $ref: '#/components/schemas/WalletBalance'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - address
+      - balances
+      - created_at
+      - id
+      - label
+      - updated_at
+    WalletBalance:
+      type: object
+      properties:
+        coin:
+          $ref: '#/components/schemas/CoinDefinition'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,8})?$
+      required:
+      - coin
+    WalletCreate:
+      type: object
+      properties:
+        label:
+          type: string
+          maxLength: 80
+      required:
+      - label
+    WalletTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        kind:
+          type: string
+          maxLength: 40
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,8})?$
+        status:
+          $ref: '#/components/schemas/WalletTransactionStatusEnum'
+        idempotency_key:
+          type: string
+          nullable: true
+          maxLength: 120
+        metadata: {}
+        from_wallet:
+          type: string
+          format: uuid
+          nullable: true
+        to_wallet:
+          type: string
+          format: uuid
+          nullable: true
+        coin:
+          type: string
+          format: uuid
+      required:
+      - amount
+      - coin
+      - created_at
+      - id
+      - kind
+      - updated_at
+    WalletTransactionStatusEnum:
+      enum:
+      - pending
+      - succeeded
+      - failed
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `succeeded` - Succeeded
+        * `failed` - Failed
+    WalletTransfer:
+      type: object
+      properties:
+        to_address:
+          type: string
+          maxLength: 80
+        coin_slug:
+          type: string
+          default: credits
+          pattern: ^[-a-zA-Z0-9_]+$
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,16}(?:\.\d{0,8})?$
+        idempotency_key:
+          type: string
+      required:
+      - amount
+      - to_address
+    Website:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 160
+        site_type:
+          allOf:
+          - $ref: '#/components/schemas/SiteTypeEnum'
+          readOnly: true
+        trust_level:
+          type: string
+          readOnly: true
+        html:
+          type: string
+        css:
+          type: string
+        js:
+          type: string
+        sandbox_policy:
+          readOnly: true
+        status:
+          type: string
+          maxLength: 20
+        content_version:
+          type: integer
+          readOnly: true
+        owner:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        domain:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - content_version
+      - created_at
+      - id
+      - owner
+      - sandbox_policy
+      - site_type
+      - title
+      - trust_level
+      - updated_at
+    WebsiteFile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        path:
+          type: string
+          maxLength: 500
+        content_type:
+          type: string
+          maxLength: 80
+        content:
+          type: string
+        website:
+          type: string
+          format: uuid
+      required:
+      - created_at
+      - id
+      - path
+      - updated_at
+      - website
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+tags:
+- name: auth
+- name: bootstrap
+- name: machines
+- name: os
+- name: apps
+- name: filesystem
+- name: software
+- name: hardware
+- name: jobs
+- name: economy
+- name: marketplace
+- name: browser
+- name: communications
+- name: progression
+- name: telemetry
